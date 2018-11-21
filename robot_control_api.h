@@ -20,18 +20,15 @@ ros::Publisher pub11;
 ros::Publisher pub12;
 ros::Publisher pub13;
 
-ros::ServiceClient joint_command_client;
-
 std_msgs::Int32MultiArray robot_speed,leg_speed,robot_MA,leg_MA,robot_HO,robot_VA,robot_MR,leg_HO,leg_VA;
 std_msgs::Int32 robot_motion,leg_motion;
 std_msgs::Float64 head_top,head_bottom;
-dynamixel_workbench_msgs::JointCommand joint_command;
 
 int vv1 = 1000, vv2 = 1000;
 
-void rosInit(int argc, char **argv)
+void rosInit(int argc, char **argv, const char *node_name)
 {
-    ros::init(argc, argv, "Track_node");
+    ros::init(argc, argv, node_name);
     ros::NodeHandle n;
     pub1 = n.advertise<std_msgs::Int32MultiArray>("robot_speed", 100);
     pub2 = n.advertise<std_msgs::Int32MultiArray>("leg_speed", 100);
@@ -50,8 +47,6 @@ void rosInit(int argc, char **argv)
     pub12 = n.advertise<std_msgs::Float64>("head_top", 100);
     pub13 = n.advertise<std_msgs::Float64>("head_bottom", 100);
 
-    joint_command_client =
-                n.serviceClient<dynamixel_workbench_msgs::JointCommand>("joint_command");
     return;
 }
 

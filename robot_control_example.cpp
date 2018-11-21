@@ -1,3 +1,4 @@
+
 #include "ros/ros.h"
 #include <cstdio>
 #include <cstdlib>
@@ -14,8 +15,7 @@
 #include "std_msgs/Int32MultiArray.h"
 #include "std_msgs/Int32.h"
 #include "std_msgs/Float64.h"
-#include <dynamixel_workbench_msgs/JointCommand.h>
-#include "control_api.h"
+#include "robot_control_api.h"
 
 int main(int argc, char **argv)
 {
@@ -30,40 +30,59 @@ int main(int argc, char **argv)
     while(ros::ok())
     {
 
-        scanf("%c", &y);
+        y = getch();
 
         if(y == 'e')
         {
+            printf("exit\n");
             break;
         }
 
         if(y == 'w')
         {
-            printf("forward");
+            printf("forward\n");
             goForward();
         }
 
         if(y == 's')
         {
-            printf("back");
+            printf("back\n");
             goBack();
         }
 
         if(y == 'a')
         {
-            printf("left");
+            printf("left\n");
             spinLeft();
         }
 
         if(y == 'd')
         {
-            printf("right");
+            printf("right\n");
             spinRight();
+        }
+
+        if(y == 'r')
+        {
+            printf("turn right\n");
+            turnLeftRight(1500, 1000);
+        }
+
+        if(y == 'l')
+        {
+            printf("turn left\n");
+            turnLeftRight(1000, 1500);
+        }
+
+        if(y == 'j')
+        {
+            printf("init arm angle\n");
+            resetArmAngle();
         }
 
         if(y == 'p')
         {
-            printf("stop");
+            printf("stop\n");
             stopMotion();
         }
 
