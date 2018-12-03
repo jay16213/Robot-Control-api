@@ -1,4 +1,3 @@
-
 #include "ros/ros.h"
 #include <cstdio>
 #include <cstdlib>
@@ -29,8 +28,26 @@ int main(int argc, char **argv)
     char y;
     while(ros::ok())
     {
-
         y = getch();
+
+        if(y == 'h')
+        {
+            printf("==========================\n");
+            printf("Key usage:\n");
+            printf(" w: go front\n");
+            printf(" a: spin left\n");
+            printf(" s: go back\n");
+            printf(" d: spin right\n");
+            printf(" p(or space): stop\n");
+            printf(" r: turn right\n");
+            printf(" l: turn left\n");
+            printf(" q: set acceleration\n");
+            printf(" t: set speed\n");
+            printf(" j: arm up\n");
+            printf(" m: arm down\n");
+            printf(" e: exit the program\n");
+            printf("==========================\n");
+        }
 
         if(y == 'e')
         {
@@ -76,16 +93,51 @@ int main(int argc, char **argv)
 
         if(y == 'j')
         {
-            printf("init arm angle\n");
-            resetArmAngle();
+            printf("arm up\n");
+            armUp();
         }
 
-        if(y == 'p')
+        if(y == 'm')
+        {
+            printf("arm down\n");
+            armDown();
+        }
+
+        if(y == 'p' || y == ' ')
         {
             printf("stop\n");
             stopMotion();
         }
 
+        if(y == 't')
+        {
+            int left_speed, right_speed;
+            printf("set speed\n");
+            printf("left: ");
+            scanf("%d", &left_speed);
+            printf("right: ");
+            scanf("%d", &right_speed);
+
+            if(left_speed < 300 || left_speed > 30000 || right_speed < 300 || right_speed > 30000)
+                printf("speed must range in 300 ~ 30000\n");
+            else
+            {
+                setSpeed(left_speed, right_speed);
+                printf("set speed: %d %d\n", left_speed, right_speed);
+            }
+        }
+
+        if(y == 'q')
+        {
+            int left_acc, right_acc;
+            printf("set acceleration\n");
+            printf("left: ");
+            scanf("%d", &left_acc);
+            printf("right: ");
+            scanf("%d", &right_acc);
+
+            setAcceleration(left_acc, right_acc);
+        }
         // loop rate 100hz
         loop_rate.sleep();
     }

@@ -1,6 +1,6 @@
-# Track Robot Environment Setup
+# Tracked Robot Environment Setup
 
-## OS
+## OS Requirement
 - You should install Ubuntu 16.04 for udoo first
 
 ## Install ROS Kinetic
@@ -46,8 +46,8 @@ sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool
 ```
 
 ## Setup tracked_robot project
-### 1. Move the project to ~/
-移完後檔案結構應如下:
+### 1. Copy the project to udoo
+將 Project 複製到 udoo 的家目錄, 移完後檔案結構應如下:
 ```
 ~/catkin_ws/
   build/                                <- ros 編譯資料夾, 可刪除
@@ -61,7 +61,7 @@ sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool
       README.md
     CMakeList.txt
 ```
-### 2. Setup Dynamixel (雲台馬達)
+### 2. Setup Dynamixel
 
 #### Install main package
 two choice to install main package:

@@ -61,6 +61,17 @@ void setSpeed(int left_speed, int right_speed)
     return;
 }
 
+void setAcceleration(int left_acc, int right_acc)
+{
+    robot_VA.data.clear();
+
+    robot_VA.data.push_back(left_acc);
+    robot_VA.data.push_back(right_acc);
+    pub6.publish(robot_VA);
+    ros::spinOnce();
+    return;
+}
+
 void goForward()
 {
     robot_motion.data = 1;
@@ -127,7 +138,7 @@ void resetSpeed()
     return;
 }
 
-void resetArmAngle()
+void armUp()
 {
     leg_MA.data.clear();
 
@@ -136,6 +147,16 @@ void resetArmAngle()
     pub4.publish(leg_MA);
     ros::spinOnce();
     return;
+}
+
+void armDown()
+{
+    leg_MA.data.clear();
+
+    leg_MA.data.push_back(0);
+    leg_MA.data.push_back(0);
+    pub4.publish(leg_MA);
+    ros::spinOnce();
 }
 
 #endif
