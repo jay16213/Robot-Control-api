@@ -31,10 +31,12 @@
 
 #### Speed Control
 - void resetSpeed();
-    - 將速度reset為350
+    - 將前進(後退)速度 reset 為 350, leg_speed 為 1000
 
 - void setSpeed(int left_speed, int right_speed);
-    - 速度限制: 350 ~ 30000
+
+- void setLegSpeed(int front_speed, int back_speed);
+    - 速度建議 1000
 
 - void setAcceleration(int left_acc, int right_acc)
     - 設定左右輪的加/減速度

@@ -61,6 +61,17 @@ void setSpeed(int left_speed, int right_speed)
     return;
 }
 
+void setLegSpeed(int front_speed, int back_speed)
+{
+    leg_speed.data.clear();
+
+    leg_speed.data.push_back(front_speed);
+    leg_speed.data.push_back(back_speed);
+    pub2.publish(leg_speed);
+    ros::spinOnce();
+    return;
+}
+
 void setAcceleration(int left_acc, int right_acc)
 {
     robot_VA.data.clear();
@@ -127,8 +138,8 @@ void resetSpeed()
 
     robot_speed.data.push_back(350);
     robot_speed.data.push_back(350);
-    leg_speed.data.push_back(100);
-    leg_speed.data.push_back(100);
+    leg_speed.data.push_back(1000);
+    leg_speed.data.push_back(1000);
     pub1.publish(robot_motion);
     pub2.publish(leg_speed);
     vv1 = 350;
