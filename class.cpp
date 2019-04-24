@@ -17,12 +17,15 @@
                  " h: Show this message\n"                                \
                  " space: stop all motion\n"                              \
                  "---------\n"                                            \
-                 " Up arrow: Go front\n"                                  \
-                 " Down arrow: Go back\n"                                 \
-                 " Left arrow: Spin left\n"                               \
+                 " Up arrow:    Go front\n"                               \
+                 " Down arrow:  Go back\n"                                \
+                 " Left arrow:  Spin left\n"                              \
                  " Right arrow: Spin right\n"                             \
                  " t: set move speed\n"                                   \
                  " y: set move acceleration\n"                            \
+                 " n: move speed +500 (max 2000)\n"                       \
+                 " m: move speed -500 (min 100)\n"                        \
+                 " b: reset move speed (700)\n"                           \
                  "---------\n"                                            \
                  " a: front arm up\n"                                     \
                  " z: front arm down\n"                                   \
@@ -34,8 +37,8 @@
                  " f: set current arm position as home position of arm\n" \
                  "---------\n"                                            \
                  " o: init dynamixel position\n"                          \
-                 " i: dynamixel up\n"                                     \
-                 " k: dynamixel down\n"                                   \
+                 " i: dynamixel down\n"                                   \
+                 " k: dynamixel up\n"                                     \
                  " j: dynamixel left\n"                                   \
                  " l: dynamixel right\n"                                  \
                  "---------\n"                                            \
@@ -46,6 +49,10 @@
 #define KEY_DOWN  66
 #define KEY_RIGHT 67
 #define KEY_LEFT  68
+
+#define MOVE_MAX_SPEED 2000
+#define MOVE_MIN_SPEED 100
+#define MOVE_DEFAULT_SPEED 700
 
 int main(int argc, char **argv)
 {
@@ -59,6 +66,7 @@ int main(int argc, char **argv)
 
     printf(HELP_MSG);
 
+    int current_speed = MOVE_DEFAULT_SPEED;
     int left_speed, right_speed, left_acc, right_acc;
     int front_angle, back_angle, front_speed, back_speed, front_acc, back_acc;
 
@@ -68,6 +76,9 @@ int main(int argc, char **argv)
         user_input = getch();
         switch (user_input)
         {
+            case 'h':
+                printf(HELP_MSG);
+                break;
             case KEY_UP:
                 robot.move(FORWARD);
                 break;
@@ -99,7 +110,7 @@ int main(int argc, char **argv)
                 robot.setArmHomePosition();
                 break;
             case 'd':
-                printf("Set arm position (angle):");
+                printf("Set arm position (angle):\n");
                 printf("front (degrees): ");
                 scanf("%d", &front_angle);
                 printf("back (degrees): ");
@@ -107,7 +118,7 @@ int main(int argc, char **argv)
                 robot.armAngle(front_angle, back_angle);
                 break;
             case 't':
-                printf("Set move speed:");
+                printf("Set move speed:\n");
                 printf("left:");
                 scanf("%d", &left_speed);
                 printf("right:");
@@ -115,15 +126,33 @@ int main(int argc, char **argv)
                 robot.setMoveSpeed(left_speed, right_speed);
                 break;
             case 'y':
-                printf("Set move acceleration:");
+                printf("Set move acceleration:\n");
                 printf("left:");
                 scanf("%d", &left_acc);
                 printf("right:");
                 scanf("%d", &right_acc);
                 robot.setMoveAcceleration(left_acc, right_acc);
                 break;
+            case 'n':
+                if(current_speed + 500 > MOVE_MAX_SPEED)
+                    current_speed = MOVE_MAX_SPEED;
+                else
+                    current_speed += 500;
+                robot.setMoveSpeed(current_speed, current_speed);
+                break;
+            case 'm':
+                if((current_speed - 500) < MOVE_MIN_SPEED || current_speed < 500)
+                    current_speed = MOVE_MIN_SPEED;
+                else
+                    current_speed -= 500;
+                robot.setMoveSpeed(current_speed, current_speed);
+                break;
+            case 'b':
+                current_speed = MOVE_DEFAULT_SPEED;
+                robot.setMoveSpeed(current_speed, current_speed);
+                break;
             case 'c':
-                printf("Set arm speed:");
+                printf("Set arm speed:\n");
                 printf("front:");
                 scanf("%d", &front_speed);
                 printf("back:");
@@ -131,21 +160,21 @@ int main(int argc, char **argv)
                 robot.setArmSpeed(front_speed, back_speed);
                 break;
             case 'v':
-                printf("Set arm acceleration:");
+                printf("Set arm acceleration:\n");
                 printf("front:");
                 scanf("%d", &front_acc);
                 printf("back:");
                 scanf("%d", &back_acc);
-                robot. (front_acc, back_acc);
+                robot.setArmAcceleration(front_acc, back_acc);
                 break;
             case 'o':
                 robot.dynamixelInit();
                 break;
             case 'i':
-                robot.dynamixel(DYNAMIXEL_UP);
+                robot.dynamixel(DYNAMIXEL_DOWN);
                 break;
             case 'k':
-                robot.dynamixel(DYNAMIXEL_DOWN);
+                robot.dynamixel(DYNAMIXEL_UP);
                 break;
             case 'j':
                 robot.dynamixel(DYNAMIXEL_LEFT);
@@ -155,61 +184,12 @@ int main(int argc, char **argv)
                 break;
             case 'q':
                 printf("Quit %s\n", NODE_NAME);
+                exit(0);
                 break;
             default:
-                printf(HELP_MSG);
                 break;
         }
 
-        // if(y == 'p' || y == ' ')
-        // {
-        //     robot.move(STOP);
-        // }
-
-        // if(y == 't')
-        // {
-        //     int left_speed, right_speed;
-        //     printf("set speed\n");
-        //     printf("left: ");
-        //     scanf("%d", &left_speed);
-        //     printf("right: ");
-        //     scanf("%d", &right_speed);
-
-        //     if(left_speed < 300 || left_speed > 30000 || right_speed < 300 || right_speed > 30000)
-        //         printf("speed must range in 300 ~ 30000\n");
-        //     else
-        //     {
-        //         robot.setMoveSpeed(left_speed, right_speed);
-        //     }
-        // }
-
-        // if(y == 'q')
-        // {
-        //     int left_acc, right_acc;
-        //     printf("set acceleration\n");
-        //     printf("left: ");
-        //     scanf("%d", &left_acc);
-        //     printf("right: ");
-        //     scanf("%d", &right_acc);
-
-        //     robot.setMoveAcceleration(left_acc, right_acc);
-        // }
-
-        // if(y == 'y')
-        // {
-        //     robot.setArmHomePosition();
-        // }
-
-        // if(y == 'g')
-        // {
-        //     int front, back;
-        //     printf("set arm angle\n");
-        //     printf("front: ");
-        //     scanf("%d", &front);
-        //     printf("back: ");
-        //     scanf("%d", &back);
-        //     robot.armAngle(front, back);
-        // }
         // loop rate 100hz
         loop_rate.sleep();
     }

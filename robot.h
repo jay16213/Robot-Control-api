@@ -27,6 +27,7 @@
 
 #define TOP_HOME    134
 #define BOTTOM_HOME 45
+#define PI 3.14159
 
 #define DEGREE_BASE 4550
 

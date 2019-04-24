@@ -34,6 +34,7 @@ void Robot::move(int motion)
 
     ROS_INFO("Robot action: %s", motion == STOP ? "stop" : \
                                  motion == FORWARD ? "forward" : \
+                                 motion == BACK ? "back" : \
                                  motion == SPIN_LEFT ? "spin left" : "spin right");
     ros::spinOnce();
     return;
@@ -63,8 +64,8 @@ void Robot::setMoveAcceleration(int left_acc, int right_acc)
 
 void Robot::arm(int motion)
 {
-    robot_motion.data = motion;
-    pub_robot_motion.publish(robot_motion);
+    leg_motion.data = motion;
+    pub_leg_motion.publish(leg_motion);
 
     char action[20];
 
@@ -78,19 +79,19 @@ void Robot::setArmSpeed(int front_speed, int back_speed)
 {
     leg_speed.data.clear();
 
-    leg_speed.data.push_back(front_speed);
     leg_speed.data.push_back(back_speed);
+    leg_speed.data.push_back(front_speed);
     pub_leg_speed.publish(leg_speed);
     ROS_INFO("Set arm speed, front: %d, back: %d", front_speed, back_speed);
     ros::spinOnce();
     return;
 }
 
-void Robot::setMoveAcceleration(int front_acc, int back_acc)
+void Robot::setArmAcceleration(int front_acc, int back_acc)
 {
     leg_VA.data.clear();
-    leg_VA.data.push_back(front_acc);
     leg_VA.data.push_back(back_acc);
+    leg_VA.data.push_back(front_acc);
     pub_leg_VA.publish(leg_VA);
     ROS_INFO("Set arm acceleration, front: %d, back: %d", front_acc, back_acc);
     ros::spinOnce();
@@ -132,11 +133,11 @@ void Robot::dynamixel(int motion)
     switch (motion)
     {
         case DYNAMIXEL_UP:
-            dynamixelPosition(dynamixel_current_top - 10, dynamixel_current_bottom);
+            dynamixelPosition(dynamixel_current_top + 10, dynamixel_current_bottom);
             ROS_INFO("Dynamixel up");
             break;
         case DYNAMIXEL_DOWN:
-            dynamixelPosition(dynamixel_current_top + 10, dynamixel_current_bottom);
+            dynamixelPosition(dynamixel_current_top - 10, dynamixel_current_bottom);
             ROS_INFO("Dynamixel down");
             break;
         case DYNAMIXEL_LEFT:
@@ -158,7 +159,7 @@ void Robot::dynamixelPosition(int top, int bottom)
 {
     joint_command.request.unit = "rad";
     joint_command.request.id = 1;
-    joint_command.request.goal_position = bottomm * PI/180;
+    joint_command.request.goal_position = bottom * PI/180;
     joint_command_client.call(joint_command);
     joint_command.request.unit = "rad";
     joint_command.request.id = 2;
